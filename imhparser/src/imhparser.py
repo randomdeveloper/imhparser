@@ -47,34 +47,10 @@ for row in  doc.cssselect("td.'vat pl10'"):
     openingBrace = scriptData.find("{")
     closingBrace = scriptData.find("}")
     jsonString = scriptData[openingBrace:closingBrace+1]
-    print jsonString
+    print jsonString    
 
     #test...
-    ratingData = json.loads('{user_rate:27}')    
-    print ratingData["user_rate"]
+    #ratingData = json.loads('{user_rate:27}')
+    #print ratingData["user_rate"]
 
     break
-
-
-
-#from BeautifulSoup import BeautifulSoup
-#soup =  BeautifulSoup(html)
-#
-#for item in soup.findAll("td", "vat pl10"):
-#    element = item.contents[1]
-#
-#    trace(element)
-#
-#    # parse author
-#    authorElement = element.span.a
-#    author = Author()
-#    author.Name = authorElement.string
-#    author.Link = authorElement["href"]
-#    trace(author.Name)
-#
-#    # parse Item
-#    itemElement = element.div.a
-#    item = Item()
-#    item.Link = itemElement["href"]
-#    item.Name = itemElement.string
-#    trace(item.Name)
