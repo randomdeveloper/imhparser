@@ -1,6 +1,6 @@
 from lxml.html import fromstring
 from lxml.html import tostring
-import simplejson as json
+import yaml
 
 def trace(obj):
     #soup version print unicode(obj).encode("cp1251")
@@ -46,11 +46,11 @@ for row in  doc.cssselect("td.'vat pl10'"):
     #get JSON data between braces {} - dirty way
     openingBrace = scriptData.find("{")
     closingBrace = scriptData.find("}")
-    jsonString = scriptData[openingBrace:closingBrace+1]
-    print jsonString    
+    jsString = scriptData[openingBrace:closingBrace+1]
+    print jsString    
 
-    #test...
-    #ratingData = json.loads('{user_rate:27}')
-    #print ratingData["user_rate"]
+    # not really yaml, but the fast way to get started...
+    data = yaml.load(jsString.replace(":", ": ")) # dirty!
+    print data["user_rate"]
 
     break
