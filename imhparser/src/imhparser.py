@@ -1,10 +1,12 @@
 from lxml.html import fromstring
 from lxml.html import tostring
 import yaml
+import re
 
 def trace(obj):
     #soup version print unicode(obj).encode("cp1251")
-    print tostring(obj, encoding="cp1251")
+    s = tostring(obj, encoding="cp1251")
+    print s[:50]
 
 class Author:
     pass
@@ -17,12 +19,12 @@ html = open("../../books.html").read()
 
 doc = fromstring(html)
 
-for row in  doc.cssselect("td.'vat pl10'"):
-    trace(row)
-    
+#regex to extract JS data associated with the item
+dataJsPattern = re.compile(r"""/\* <!\[CDATA\[ \*/var params = (\{.*\}).*""")
+
+for row in  doc.cssselect("td.'vat pl10'"):    
     #parse author
     authorElement = row.cssselect("div span a")[0]
-    trace(authorElement)
 
     author = Author()
     author.Link = authorElement.attrib["href"]
@@ -31,26 +33,17 @@ for row in  doc.cssselect("td.'vat pl10'"):
 
     #parse item
     itemElement = row.cssselect("div div a")[0]
-    trace(itemElement)
     item = Item()
     item.Link = itemElement.attrib["href"]
     item.Name = itemElement.text_content()
     print item.Name
 
     #parse script data
-    scriptElement = row.cssselect("script")[3]
-    trace(scriptElement)
-    scriptData = scriptElement.text_content()
-    print scriptData
-
-    #get JSON data between braces {} - dirty way
-    openingBrace = scriptData.find("{")
-    closingBrace = scriptData.find("}")
-    jsString = scriptData[openingBrace:closingBrace+1]
-    print jsString    
-
-    # not really yaml, but the fast way to get started...
-    data = yaml.load(jsString.replace(":", ": ")) # dirty!
-    print data["user_rate"]
-
-    break
+    for scriptElement in row.cssselect("script"):        
+        scriptData = scriptElement.text_content()
+        match = dataJsPattern.match(scriptData)
+        if match:
+            # not really yaml, but the fast way to get started...
+            yamlData = match.group(1).replace(":", ": ") # YAML is strict...
+            data = yaml.load(yamlData)
+            print data["user_rate"]
