@@ -1,15 +1,20 @@
 from lxml.html import fromstring
-from lxml.html import tostring
+from pymongo import Connection
+import logging
 
 from ratings import *
 
-def trace(obj):
-    s = tostring(obj, encoding="cp1251")
-    print s[:50]
+logging.basicConfig(level = logging.DEBUG)
+
+connection = Connection()
+db = connection["imhonet"]
 
 html = open("../../books.html").read()
 
-doc = fromstring(html)
+page = fromstring(html)
 
-for rating in ratings_from_page(doc):
-   print rating["item_name"].encode("cp1251")
+for rating in ratings_from_page(page):
+    #update existing rating or insert a new one    
+    db.ratings.update({"element_id": rating["element_id"]}, rating, True)
+    
+    logging.info("Item rating saved: %s", rating["item_name"])

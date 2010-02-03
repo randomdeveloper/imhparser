@@ -1,9 +1,14 @@
-import yaml
+import logging
 import re
+import yaml
 
 #regex to extract JS data associated with the item
 dataJsPattern = re.compile(r"""/\* <!\[CDATA\[ \*/var params = (\{.*\}).*""")
 
+def trace(obj):
+    s = tostring(obj, encoding="cp1251")
+    print s[:50]
+    
 def ratings_from_page(page):
     i = 1
     for rating_html in page.cssselect("td.'vat pl10'"):
@@ -36,5 +41,5 @@ def ratings_from_page(page):
 
             yield rating
         except:
-            print "Exception while parsing rating from html"
+            logging.error("Exception while parsing rating from html")
             pass
