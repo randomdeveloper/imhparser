@@ -12,5 +12,4 @@ html = open("../../books.html").read()
 doc = fromstring(html)
 
 for rating in ratings_from_page(doc):
-    print rating
-    break
+   print rating["item_name"].encode("cp1251")
