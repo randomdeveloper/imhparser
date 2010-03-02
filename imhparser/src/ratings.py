@@ -41,5 +41,8 @@ def ratings_from_page(page):
 
             yield rating
         except:
-            logging.error("Exception while parsing rating from html")
+            logging.exception("Error while parsing rating from html")
             pass
+
+def ratings_ended(page):
+    return page.cssselect("div.tipHint") != []
