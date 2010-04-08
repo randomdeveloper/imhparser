@@ -3,16 +3,29 @@ import logging
 from lxml.html import fromstring
 from pymongo import Connection
 
-from ratings import *
 from pages import *
+from ratings import *
+from items import *
 
 logging.basicConfig(level = logging.DEBUG)
 
 connection = Connection()
 db = connection["imhonet"]
 
+f = open("..\\..\\item.html")
+html = f.read()
+page = fromstring(html)
+item_from_page(page)
+
+f = open("..\\..\\item2.html")
+html = f.read()
+page = fromstring(html)
+item_from_page(page)
+
+exit(0)
+
 # process rating pages until they are over
-for html in ratingpages("qizz", 1):
+for html in ratingpages("qizz"):
     try:        
         # create lxml document
         page = fromstring(html)
