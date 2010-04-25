@@ -17,16 +17,18 @@ a#rates_amount_1
 """
 
 def dict_from_page(page, template):
-    # states
+    # parser states
     top, element = range(2)
     state = top
-    
+
+
     last_indent = 0
     for line in template.splitlines():
         s = line.lstrip()
         if s == "":
             continue
-        
+
+        # unindent means new css selector block        
         indent = len(line) - len(s)
         if indent < last_indent:
             state = top  #must be element again
@@ -35,10 +37,18 @@ def dict_from_page(page, template):
         if state == top:
             selector = s
             state = element
-            print "Css selector: ", selector
+            print "->css selector: ", selector
         elif state == element:
-            print "smth else: ", s
-        
-
+            t = s.partition(" ")
+            key = t[0]
+            print "key ", key
+            if t[1] == "":                
+                print "text content"
+            else:
+                tail = t[2].lstrip()
+                if tail[0] == "$":
+                    print "regexp ", tail
+                else:
+                    print "unknown"
 
 dict_from_page(None, template)
