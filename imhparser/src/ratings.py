@@ -5,6 +5,16 @@ import yaml
 #regex to extract JS data associated with the item
 dataJsPattern = re.compile(r"""/\* <!\[CDATA\[ \*/var params = (\{.*\}).*""")
 
+template = r"""@each td.'vat pl10'
+  div span a
+    author_link   @href
+    author_name
+  div div a
+    item_link     @href
+    item_name
+  script
+    script"""
+    
 def trace(obj):
     s = tostring(obj, encoding="cp1251")
     print s[:50]

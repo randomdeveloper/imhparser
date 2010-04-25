@@ -6,6 +6,21 @@ import re
 year_re = re.compile(ur".*?(\d+) год.*", re.UNICODE)
 duration_re = re.compile(ur".*?(\d+) мин.*", re.UNICODE)
 
+template = ur"""
+h1
+  title
+div#HeadNavigation2 div span.nobr
+  original_title
+div.element_header div.mb10 div
+  short_info
+  year $".*?(\d+) год.*"
+  duration $".*?(\d+) мин.*"
+span#MainInfoSmallDescription
+  description
+a#rates_amount_1
+  rates_count
+"""
+
 def item_from_page(page):
     item = {}
     # title
