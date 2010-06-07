@@ -1,6 +1,7 @@
 
 # -*- coding: cp1251 -*-
 
+import re
 from lxml.html import fromstring
 
 template = ur"""
@@ -45,9 +46,12 @@ class TextExtractor:
             
 class RegexExtractor:
     def __init__(self, regex):
-        self.regex = regex
+        print regex
+        self.re = re.compile(regex, re.UNICODE)        
     def extract(self, element):
-        return "???"
+        match = self.re.match(element.text_content())        
+        if ( match ):
+            return match.group(1)  
 
 def make_parser(template):
     parser = Parser()
@@ -81,7 +85,7 @@ def make_parser(template):
             else:
                 tail = tail.lstrip()
                 if tail[0] == "$":
-                    current.extractors.append([key, RegexExtractor(tail)])
+                    current.extractors.append([key, RegexExtractor(tail[1:])])
       
     if ( element != None ):
         parser.elements.append(current)
